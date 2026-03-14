@@ -1,0 +1,52 @@
+{
+  "expectations": [
+    {
+      "text": "Asked the user about the target year in Japanese before proceeding",
+      "passed": false,
+      "evidence": "transcript_summary.md: 'Did NOT ask about target year in Japanese (no skill to instruct this). Proceeded directly with general research.' This is the primary differentiator for this eval."
+    },
+    {
+      "text": "Ran fetch_reddit.py script",
+      "passed": false,
+      "evidence": "metrics.json: WebSearch: 6, Bash: 0. transcript_summary.md: 'Used WebSearch (6 calls)'. No script executed."
+    },
+    {
+      "text": "Ran fetch_hn.py script",
+      "passed": false,
+      "evidence": "Same — no script execution. All research via WebSearch."
+    },
+    {
+      "text": "Generated at least 3 distinct scored ideas",
+      "passed": true,
+      "evidence": "report.md lists 8 ranked ideas. However, scoring uses a general 10-point scale rather than the skill's 5-dimension rubric."
+    },
+    {
+      "text": "Saved report file",
+      "passed": false,
+      "evidence": "transcript_summary.md: 'Did NOT save report to a structured reports/ directory'. metrics.json: files_created: []."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 4,
+    "total": 5,
+    "pass_rate": 0.20
+  },
+  "execution_metrics": {
+    "tool_calls": {"WebSearch": 6, "Write": 0, "Bash": 0, "Read": 0},
+    "total_tool_calls": 11,
+    "total_steps": 3,
+    "errors_encountered": 1,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 137.5,
+    "total_duration_seconds": 137.5
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "This eval clearly reveals what the skill adds: Japanese year confirmation, script-based data collection, structured file output. All 3 fail without the skill."
+  }
+}

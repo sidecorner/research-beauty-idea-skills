@@ -1,0 +1,45 @@
+{
+  "skill_name": "research-beauty-idea",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to explore niche beauty app ideas for 2025. I'm a solo developer with full-stack skills (React + Python) and about 3 months to build an MVP. Research what women are complaining about in Reddit skincare/beauty communities and on Hacker News, then suggest the most buildable ideas ranked by opportunity.",
+      "expected_output": "Should ask about target year (or accept 2025 from prompt), run fetch_reddit.py and fetch_hn.py, output 5+ specific ideas with problem/solution/evidence structure, apply 5-dimension scoring table per idea, save report to reports/2025/YYYY-MM-DD/HH-MM.md",
+      "files": [],
+      "expectations": [
+        "Ran fetch_reddit.py script (not just web search)",
+        "Ran fetch_hn.py script (not just web search)",
+        "Generated at least 5 distinct product ideas",
+        "Each idea has a 5-row scoring table with all 5 dimensions",
+        "Saved report file under reports/2025/ directory",
+        "Report file path was communicated to the user"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "スキンケアや美容系のニッチなアプリアイデアを調査してほしい。特に30代以上の女性や敏感肌・ロゼーシャを持つ人々が困っていることに注目してほしい。年号は2024年で。",
+      "expected_output": "Should recognize the Japanese request, run scripts, focus on 30+ women and sensitive/rosacea skin, generate scored ideas, save to reports/2024/...",
+      "files": [],
+      "expectations": [
+        "Ran fetch_reddit.py with --year 2024",
+        "Ran fetch_hn.py with --year 2024",
+        "Ideas specifically address mature or sensitive skin users",
+        "Scoring table present for each idea",
+        "Report saved to reports/2024/ directory"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Find me beauty app ideas worth building. I don't have a year preference.",
+      "expected_output": "Should ask user in Japanese what year to use (e.g. 調査対象の年号を教えてください...), then proceed with current year (2026) if no answer, run scripts, generate report",
+      "files": [],
+      "expectations": [
+        "Asked the user about the target year in Japanese before proceeding",
+        "Ran fetch_reddit.py script",
+        "Ran fetch_hn.py script",
+        "Generated at least 3 distinct scored ideas",
+        "Saved report file"
+      ]
+    }
+  ]
+}

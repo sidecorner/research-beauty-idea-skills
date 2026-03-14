@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "year-not-specified-asks-japanese",
+  "prompt": "Find me beauty app ideas worth building. I don't have a year preference.",
+  "assertions": [
+    "Asked the user about the target year in Japanese before proceeding",
+    "Ran fetch_reddit.py script",
+    "Ran fetch_hn.py script",
+    "Generated at least 3 distinct scored ideas",
+    "Saved report file"
+  ]
+}

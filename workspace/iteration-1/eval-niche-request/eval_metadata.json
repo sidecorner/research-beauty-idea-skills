@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "niche-japanese-2024",
+  "prompt": "スキンケアや美容系のニッチなアプリアイデアを調査してほしい。特に30代以上の女性や敏感肌・ロゼーシャを持つ人々が困っていることに注目してほしい。年号は2024年で。",
+  "assertions": [
+    "Ran fetch_reddit.py with --year 2024",
+    "Ran fetch_hn.py with --year 2024",
+    "Ideas specifically address mature or sensitive skin users",
+    "Scoring table present for each idea",
+    "Report saved to reports/2024/ directory"
+  ]
+}

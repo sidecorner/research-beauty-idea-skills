@@ -1,0 +1,57 @@
+{
+  "expectations": [
+    {
+      "text": "Ran fetch_reddit.py script (not just web search)",
+      "passed": false,
+      "evidence": "metrics.json shows WebSearch: 12 calls, Bash: 0. transcript_summary.md confirms 'fetch_reddit.py / fetch_hn.py は使用せず'. Used WebSearch for all research."
+    },
+    {
+      "text": "Ran fetch_hn.py script (not just web search)",
+      "passed": false,
+      "evidence": "Same as above — no script execution. transcript_summary.md: 'fetch_reddit.py / fetch_hn.py は使用せず'."
+    },
+    {
+      "text": "Generated at least 5 distinct product ideas",
+      "passed": true,
+      "evidence": "report.md lists 6 ranked ideas: Routine Conflict App, Long-Term Skincare Journal, Cross-Brand Shade Finder, Precision Beauty, Hormonal Skin Companion, Review Aggregator."
+    },
+    {
+      "text": "Each idea has a 5-row scoring table with all 5 dimensions",
+      "passed": false,
+      "evidence": "report.md uses a simple 4-column table (Rank/Idea/Score/Buildable?) with a single 10-point score. Does not use the 5 dimensions: 実現可能性/開発期間/収益性/競合優位性/小規模適性."
+    },
+    {
+      "text": "Saved report file under reports/2025/ directory",
+      "passed": false,
+      "evidence": "transcript_summary.md: 'reports/ ディレクトリへの保存なし'. metrics.json shows files_created: []."
+    },
+    {
+      "text": "Report file path was communicated to the user",
+      "passed": false,
+      "evidence": "No file was created, so no path could be communicated."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 5,
+    "total": 6,
+    "pass_rate": 0.17
+  },
+  "execution_metrics": {
+    "tool_calls": {"WebSearch": 12, "Write": 0, "Bash": 0, "Read": 0},
+    "total_tool_calls": 50,
+    "total_steps": 5,
+    "errors_encountered": 1,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 493.6,
+    "total_duration_seconds": 493.6
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are highly discriminating. The without-skill run fails 5/6 because it lacks structured workflow, scripts, and file output — exactly what the skill provides."
+  }
+}

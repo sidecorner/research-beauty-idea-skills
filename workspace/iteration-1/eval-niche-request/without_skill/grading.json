@@ -1,0 +1,57 @@
+{
+  "expectations": [
+    {
+      "text": "Ran fetch_reddit.py with --year 2024",
+      "passed": false,
+      "evidence": "metrics.json: Bash: 0, WebSearch: 10. transcript_summary.md: 'fetch_reddit.py / fetch_hn.py は使用せず'. No script was executed."
+    },
+    {
+      "text": "Ran fetch_hn.py with --year 2024",
+      "passed": false,
+      "evidence": "Same — no script execution. WebSearch used instead."
+    },
+    {
+      "text": "Ideas specifically address mature or sensitive skin users",
+      "passed": true,
+      "evidence": "report.md includes RosaceaLog (rosacea), PeriGlow (更年期), SafeLayer (敏感肌), DermConnect (ロゼーシャ), MindSkin (ロゼーシャ). Demographic is addressed."
+    },
+    {
+      "text": "Scoring table present for each idea",
+      "passed": true,
+      "evidence": "report.md uses 5-axis scoring table per idea. However, axes differ from the skill's rubric (市場規模/差別化/実現可能性/収益性/インパクト vs 実現可能性/開発期間/収益性/競合優位性/小規模適性)."
+    },
+    {
+      "text": "Report saved to reports/2024/ directory",
+      "passed": false,
+      "evidence": "transcript_summary.md: 'reports/ ディレクトリへの保存なし'. metrics.json: files_created: []."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.40
+  },
+  "execution_metrics": {
+    "tool_calls": {"WebSearch": 10, "Write": 0, "Bash": 0, "Read": 0},
+    "total_tool_calls": 13,
+    "total_steps": 4,
+    "errors_encountered": 1,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 226.8,
+    "total_duration_seconds": 226.8
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Scoring table present for each idea",
+        "reason": "This passes even when different scoring axes are used. Consider specifying 'uses the 5 dimensions from scoring-rubric.md' to be more precise."
+      }
+    ],
+    "overall": "The scoring table assertion is too lenient — any table passes. Tighten it to check for the specific 5 dimensions."
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "expectations": [
+    {
+      "text": "Ran fetch_reddit.py with --year 2024",
+      "passed": true,
+      "evidence": "transcript_summary.md: 'fetch_reddit.py --year 2024 → 375 posts'. Report cites HN 2024 posts specifically (e.g. 'Show HN: Dermatology-Grade Acne Assessment Tool 2024')."
+    },
+    {
+      "text": "Ran fetch_hn.py with --year 2024",
+      "passed": true,
+      "evidence": "transcript_summary.md: 'fetch_hn.py --year 2024 → 8 posts'. Report Evidence sections cite specific 2024 HN posts."
+    },
+    {
+      "text": "Ideas specifically address mature or sensitive skin users",
+      "passed": true,
+      "evidence": "All 4 ideas target the specified demographics: RosaceaTrack (rosacea), SensitiveMatch (sensitive skin), AgeSkinCoach (30代以上), AcneOut (ニキビ慢性). フォーカスセクションに '30代以上の女性・敏感肌・ロゼーシャ' と明記。"
+    },
+    {
+      "text": "Scoring table present for each idea",
+      "passed": true,
+      "evidence": "All 4 ideas have 5-dimension tables (実現可能性/開発期間/収益性/競合優位性/小規模適性). RosaceaTrack: 4/4/4/5/5=22. SensitiveMatch: 5/4/3/3/5=20."
+    },
+    {
+      "text": "Report saved to reports/2024/ directory",
+      "passed": true,
+      "evidence": "transcript_summary.md: 'レポート保存先: reports/2024/2026-03-14/14-00.md'. File verified at that path."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {"Bash": 4, "Write": 1, "Read": 3, "WebSearch": 0},
+    "total_tool_calls": 8,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 4600,
+    "transcript_chars": 2000
+  },
+  "timing": {
+    "executor_duration_seconds": 485.7,
+    "total_duration_seconds": 485.7
+  },
+  "claims": [
+    {
+      "claim": "Japanese prompt's year (2024年) was correctly extracted",
+      "type": "process",
+      "verified": true,
+      "evidence": "transcript_summary.md confirms year 2024 used, and scripts run with --year 2024"
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks that the response language matches the user's Japanese input. Adding 'Report contains Japanese text / responds in Japanese' would test language adaptation."
+      }
+    ],
+    "overall": "Good coverage. Consider adding a language-matching assertion for Japanese prompts."
+  }
+}

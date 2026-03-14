@@ -1,0 +1,14 @@
+{
+  "tool_calls": {
+    "Bash": 4,
+    "Write": 1,
+    "Read": 3,
+    "WebSearch": 0
+  },
+  "total_tool_calls": 8,
+  "total_steps": 5,
+  "files_created": ["reports/2025/2026-03-14/14-00.md"],
+  "errors_encountered": 0,
+  "output_chars": 4800,
+  "transcript_chars": 2100
+}
