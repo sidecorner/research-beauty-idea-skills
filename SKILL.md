@@ -88,7 +88,7 @@ Be honest — a score of 3 is not a failure, it's useful calibration.
 Save the report to:
 
 ```
-reports/{TARGET_YEAR}/{YYYY-MM-DD}/{HH-MM}.md
+reports/{TARGET_YEAR}/{YYYY-MM-DD}/{HH-MM-SS}.md
 ```
 
 Use the template in `references/report-template.md`.
