@@ -49,6 +49,16 @@ skincare SaaS
 
 ---
 
+## 関連性フィルタについて
+
+`fetch_hn.py` は取得した投稿タイトルに美容関連キーワード（skin/beauty/cosmetic/hair/ingredient 等）が含まれるかを自動チェックし、無関係な投稿を除外します。
+
+- `filtered_out_irrelevant` フィールドに除外件数が記録されます
+- フィルタを無効にする場合: `--no-relevance-filter` フラグを使用
+- HNは美容特化シグナルが薄い傾向があります。特に「現在年」の調査では **Qiitaとのシグナル補完**が重要です
+
+---
+
 ## Manual HN search tips
 
 If the API returns sparse results, supplement with these manual searches:

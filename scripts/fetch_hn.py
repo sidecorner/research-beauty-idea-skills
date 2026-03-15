@@ -7,6 +7,11 @@ Usage:
     python scripts/fetch_hn.py --year 2025 --min-points 5 --output /tmp/hn_raw.json
 
 HN Algolia API is public and requires no authentication.
+
+Date range logic:
+    - If TARGET_YEAR == current year (year not yet complete), searches the past 12 months
+      from today (e.g., 2026-03 → 2025-03 to 2026-03).
+    - If TARGET_YEAR < current year (full year passed), searches Jan 1 to Dec 31 of that year.
 """
 
 import argparse
@@ -14,10 +19,11 @@ import json
 import time
 import urllib.request
 import urllib.parse
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
-# Query terms relevant to beauty tech on HN
+# Query terms relevant to beauty tech on HN.
+# Use specific phrases to reduce noise from general AI/tech posts.
 BEAUTY_QUERIES = [
     "skincare app",
     "beauty technology",
@@ -34,17 +40,53 @@ BEAUTY_QUERIES = [
     "beauty ecommerce",
     "wellness app women",
     "cosmetics formulation",
+    "skin tone matching",
+    "beauty SaaS",
+    "cosmetics startup",
+    "shade matching",
+]
+
+# Keywords that indicate a post is actually beauty-related.
+# Used for post-fetch relevance filtering to reduce noise.
+BEAUTY_RELEVANCE_KEYWORDS = [
+    "skin", "skincare", "beauty", "cosmetic", "makeup", "hair", "derm",
+    "ingredient", "serum", "moisturizer", "sunscreen", "acne", "shampoo",
+    "fragrance", "perfume", "nail", "spa", "salon", "wellness", "personal care",
+    "shade", "foundation", "lipstick", "blush", "concealer",
 ]
 
 ALGOLIA_BASE = "https://hn.algolia.com/api/v1/search"
 
 
-def fetch_hn_posts(query: str, year: int, min_points: int = 5) -> list[dict]:
-    """Fetch HN posts matching a query within the given year."""
-    # Build date range for the year
-    year_start = int(datetime(year, 1, 1, tzinfo=timezone.utc).timestamp())
-    year_end = int(datetime(year, 12, 31, 23, 59, 59, tzinfo=timezone.utc).timestamp())
+def compute_date_range(target_year: int) -> tuple[int, int]:
+    """
+    Compute Unix timestamp range for the target year.
 
+    If target_year == current year (year not yet complete), use past 12 months from today.
+    If target_year < current year (full year has passed), use Jan 1 to Dec 31 of that year.
+    """
+    now = datetime.now(timezone.utc)
+    current_year = now.year
+
+    if target_year >= current_year:
+        end_dt = now
+        start_dt = now - timedelta(days=365)
+    else:
+        start_dt = datetime(target_year, 1, 1, tzinfo=timezone.utc)
+        end_dt = datetime(target_year, 12, 31, 23, 59, 59, tzinfo=timezone.utc)
+
+    return int(start_dt.timestamp()), int(end_dt.timestamp())
+
+
+def is_beauty_relevant(title: str) -> bool:
+    """Check if a post title actually relates to beauty/wellness topics."""
+    title_lower = title.lower()
+    return any(kw in title_lower for kw in BEAUTY_RELEVANCE_KEYWORDS)
+
+
+def fetch_hn_posts(query: str, year_start: int, year_end: int,
+                   min_points: int = 5) -> list[dict]:
+    """Fetch HN posts matching a query within the given timestamp range."""
     params = urllib.parse.urlencode({
         "query": query,
         "tags": "story",
@@ -65,9 +107,10 @@ def fetch_hn_posts(query: str, year: int, min_points: int = 5) -> list[dict]:
 
 def normalize_post(hit: dict, query: str) -> dict:
     """Normalize an Algolia HN hit to a standard structure."""
+    title = hit.get("title", "")
     return {
         "object_id": hit.get("objectID", ""),
-        "title": hit.get("title", ""),
+        "title": title,
         "url": hit.get("url", ""),
         "hn_url": f"https://news.ycombinator.com/item?id={hit.get('objectID', '')}",
         "points": hit.get("points", 0),
@@ -75,6 +118,7 @@ def normalize_post(hit: dict, query: str) -> dict:
         "author": hit.get("author", ""),
         "created_at": hit.get("created_at", ""),
         "matched_query": query,
+        "beauty_relevant": is_beauty_relevant(title),
         "engagement_score": hit.get("points", 0) + hit.get("num_comments", 0) * 2,
     }
 
@@ -82,32 +126,43 @@ def normalize_post(hit: dict, query: str) -> dict:
 def main():
     parser = argparse.ArgumentParser(description="Fetch beauty-related HN posts for idea research")
     parser.add_argument("--year", type=int, default=datetime.now().year,
-                        help="Target year for filtering posts (default: current year)")
+                        help="Target year (default: current year → past 12 months)")
     parser.add_argument("--min-points", type=int, default=5,
                         help="Minimum HN points threshold (default: 5)")
     parser.add_argument("--output", type=str, default="/tmp/hn_raw.json",
                         help="Output JSON file path")
     parser.add_argument("--queries", type=str, default=None,
                         help="Comma-separated query list (default: built-in beauty list)")
+    parser.add_argument("--no-relevance-filter", action="store_true",
+                        help="Disable beauty relevance filtering (include all query matches)")
     args = parser.parse_args()
 
     queries = args.queries.split(",") if args.queries else BEAUTY_QUERIES
     target_year = args.year
 
-    print(f"Fetching HN posts for year {target_year} using {len(queries)} queries...")
+    year_start, year_end = compute_date_range(target_year)
+    start_label = datetime.fromtimestamp(year_start, tz=timezone.utc).strftime("%Y-%m-%d")
+    end_label = datetime.fromtimestamp(year_end, tz=timezone.utc).strftime("%Y-%m-%d")
+    print(f"Date range: {start_label} to {end_label}")
+    print(f"Fetching HN posts using {len(queries)} queries...")
 
-    seen_ids = set()
-    all_posts = []
+    seen_ids: set[str] = set()
+    all_posts: list[dict] = []
+    filtered_out = 0
 
     for query in queries:
         print(f"  Searching: '{query}'...")
-        hits = fetch_hn_posts(query, target_year, min_points=args.min_points)
+        hits = fetch_hn_posts(query, year_start, year_end, min_points=args.min_points)
 
         for hit in hits:
             post = normalize_post(hit, query)
             if post["object_id"] not in seen_ids:
                 seen_ids.add(post["object_id"])
-                all_posts.append(post)
+                # Apply relevance filter unless disabled
+                if args.no_relevance_filter or post["beauty_relevant"]:
+                    all_posts.append(post)
+                else:
+                    filtered_out += 1
 
         time.sleep(0.5)  # gentle rate limiting
 
@@ -116,8 +171,13 @@ def main():
 
     output = {
         "target_year": target_year,
+        "date_range": {
+            "start": datetime.fromtimestamp(year_start, tz=timezone.utc).isoformat(),
+            "end": datetime.fromtimestamp(year_end, tz=timezone.utc).isoformat(),
+        },
         "fetched_at": datetime.now(timezone.utc).isoformat(),
         "total_posts": len(all_posts),
+        "filtered_out_irrelevant": filtered_out,
         "queries_used": queries,
         "posts": all_posts,
     }
@@ -125,7 +185,7 @@ def main():
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"\nDone! Found {len(all_posts)} unique HN posts.")
+    print(f"\nDone! Found {len(all_posts)} beauty-relevant HN posts ({filtered_out} filtered as off-topic).")
     print(f"Output saved to: {args.output}")
 
 
