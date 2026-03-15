@@ -1,7 +1,7 @@
 # Report Template
 
 Use this template when generating the research output file.
-Save to: `reports/{TARGET_YEAR}/{YYYY-MM-DD}/{HH-MM-SS}.md`
+Save to: `reports/{TARGET_YEAR}/{YYYY-MM-DD}/{HH-MM}.md`
 
 ---
 
@@ -11,7 +11,7 @@ Save to: `reports/{TARGET_YEAR}/{YYYY-MM-DD}/{HH-MM-SS}.md`
 **Generated**: {YYYY-MM-DD HH:MM:SS}
 **Search period**: {START_DATE} 〜 {END_DATE}
 **Data sources**: Reddit ({N} posts from {M} subreddits) · Hacker News ({K} posts) · Qiita ({Q} articles)
-**Methodology**: See [beauty-subreddits.md](../../references/beauty-subreddits.md), [hn-search-guide.md](../../references/hn-search-guide.md), and [qiita-search-guide.md](../../references/qiita-search-guide.md)
+**Methodology**: See [beauty-subreddits.md](../../references/beauty-subreddits.md) and [source-guidelines.md](../../references/source-guidelines.md)
 
 ---
 
